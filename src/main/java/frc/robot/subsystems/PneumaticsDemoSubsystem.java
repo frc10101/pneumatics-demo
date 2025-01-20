@@ -34,7 +34,6 @@ public class PneumaticsDemoSubsystem extends SubsystemBase {
     }
   }
 
-  /** Creates a new PneumaticsDemoSubsystem. */
   private PneumaticsDemoSubsystem() {
     mSolenoid = createSolenoid();
     mDoubleSolenoid = createDoubleSolenoid();
@@ -56,28 +55,28 @@ public class PneumaticsDemoSubsystem extends SubsystemBase {
     return runOnce(() -> mSolenoid.toggle());
   }
 
-  public Command doubleForward() {
+  private Command setDoubleSolenoidState(DoubleSolenoid.Value direction) {
     if (mDoubleSolenoid == null) {
       return Commands.print("Could not create double solenoid. Check PH ports 1 and 2");
     }
 
-    return runOnce(() -> mDoubleSolenoid.set(Value.kForward));
+    if (direction == null) {
+      return runOnce(() -> mDoubleSolenoid.set(Value.kOff));
+    }
+
+    return runOnce(() -> mDoubleSolenoid.set(direction));
+  }
+
+  public Command doubleForward() {
+    return setDoubleSolenoidState(Value.kForward);
   }
 
   public Command doubleReverse() {
-    if (mDoubleSolenoid == null) {
-      return Commands.print("Could not create double solenoid. Check PH ports 1 and 2");
-    }
-
-    return runOnce(() -> mDoubleSolenoid.set(Value.kReverse));
+    return setDoubleSolenoidState(Value.kReverse);
   }
 
   public Command doubleOff() {
-    if (mDoubleSolenoid == null) {
-      return Commands.print("Could not create double solenoid. Check PH ports 1 and 2");
-    }
-
-    return runOnce(() -> mDoubleSolenoid.set(Value.kOff));
+    return setDoubleSolenoidState(Value.kOff);
   }
 
   @Override
